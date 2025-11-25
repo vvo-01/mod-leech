@@ -30,3 +30,11 @@ Leech.DungeonsOnly = 1
 #
 
 Leech.Amount = 0.05
+#
+#    Leech.RequiredItemId
+#        Description: Allows setting an item required in bags to activate leech.
+#        Default:     0 - No Item Required
+#                     xxxxx - Specify the item ID
+#
+
+Leech.RequiredItemId = 0

@@ -28,6 +28,12 @@ public:
             return;
         }
 
+        uint32 requiredItem = sConfigMgr->GetOption<uint32>("Leech.RequiredItemId", 0u);
+        if (requiredItem != 0 && !(player->HasItemCount(requiredItem, 1, false)))
+        {
+            return;
+        }
+
         auto leechAmount = sConfigMgr->GetOption<float>("Leech.Amount", 0.05f);
         auto bp1 = static_cast<int32>(leechAmount * float(damage));
         player->CastCustomSpell(attacker, SPELL_HEAL, &bp1, nullptr, nullptr, true);
