@@ -4,6 +4,41 @@
 
 #include "Leech.h"
 
+#include <vector>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <limits>
+#include <cstdlib>
+
+static std::vector<uint32> const& Leech_GetRequiredItemIds()
+{
+    static std::vector<uint32> ids;
+    static bool inited = false;
+    if (!inited)
+    {
+        std::string raw = sConfigMgr->GetOption<std::string>("Leech.RequiredItemId", "");
+        if (!raw.empty())
+        {
+            std::stringstream ss(raw);
+            std::string tok;
+            while (std::getline(ss, tok, ','))
+            {
+                tok.erase(std::remove_if(tok.begin(), tok.end(), ::isspace), tok.end());
+                if (!tok.empty())
+                {
+                    char* end = nullptr;
+                    unsigned long v = std::strtoul(tok.c_str(), &end, 10);
+                    if (end != tok.c_str() && *end == '\0' && v <= std::numeric_limits<uint32>::max())
+                        ids.push_back(static_cast<uint32>(v));
+                }
+            }
+        }
+        inited = true;
+    }
+    return ids;
+}
+
 class Leech_UnitScript : public UnitScript
 {
 public:
@@ -28,11 +63,17 @@ public:
             return;
         }
 
-        uint32 requiredItem = sConfigMgr->GetOption<uint32>("Leech.RequiredItemId", 0u);
-        if (requiredItem != 0 && !(player->HasItemCount(requiredItem, 1, false)))
-        {
-            return;
-        }
+        auto const& reqIds = Leech_GetRequiredItemIds();
+		if (!reqIds.empty())
+		{
+			bool hasAny = false;
+			for (uint32 id : reqIds)
+			{
+				if (player->HasItemCount(id, 1, false)) { hasAny = true; break; }
+			}
+			if (!hasAny)
+				return;
+		}
 
         auto leechAmount = sConfigMgr->GetOption<float>("Leech.Amount", 0.05f);
         auto bp1 = static_cast<int32>(leechAmount * float(damage));
