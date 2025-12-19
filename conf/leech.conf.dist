@@ -38,3 +38,6 @@ Leech.Amount = 0.05
 #
 
 Leech.RequiredItemId = 0
+
+# Leech target from pet damage = pet | owner | none
+Leech.PetDamage = pet
