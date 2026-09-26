@@ -2,8 +2,22 @@
  * Copyright (C) 2016+ AzerothCore <www.azerothcore.org>, released under GNU AGPL v3 license
  */
 
-#include "Leech.h"
+#include "ScriptMgr.h"
+#include "Player.h"
+#include "Config.h"
 #include <cmath>
+
+enum LeechSpells
+{
+    SPELL_HEAL = 18984
+};
+
+enum LeechPetMode
+{
+    LEECH_PET_PET   = 0,
+    LEECH_PET_OWNER = 1,
+    LEECH_PET_NONE  = 2
+};
 
 // ---------------------------------------------------------------------------
 // Cached configuration (filled in OnAfterConfigLoad)
@@ -38,20 +52,20 @@ public:
     static LeechPetMode PetMode()    { return _petMode; }
 
 private:
-    static bool    _enabled;
-    static bool    _dungeonsOnly;
-    static float   _amount;
-    static bool    _allowSelfDamage;
-    static uint32  _requiredItem;
+    static bool         _enabled;
+    static bool         _dungeonsOnly;
+    static float        _amount;
+    static bool         _allowSelfDamage;
+    static uint32       _requiredItem;
     static LeechPetMode _petMode;
 };
 
-bool    Leech_WorldScript::_enabled         = false;
-bool    Leech_WorldScript::_dungeonsOnly    = true;
-float   Leech_WorldScript::_amount          = 0.05f;
-bool    Leech_WorldScript::_allowSelfDamage = false;
-uint32  Leech_WorldScript::_requiredItem    = 0;
-LeechPetMode Leech_WorldScript::_petMode    = LEECH_PET_PET;
+bool         Leech_WorldScript::_enabled         = false;
+bool         Leech_WorldScript::_dungeonsOnly    = true;
+float        Leech_WorldScript::_amount          = 0.05f;
+bool         Leech_WorldScript::_allowSelfDamage = false;
+uint32       Leech_WorldScript::_requiredItem    = 0;
+LeechPetMode Leech_WorldScript::_petMode         = LEECH_PET_PET;
 
 // ---------------------------------------------------------------------------
 // Unit script (leech on damage)
