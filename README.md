@@ -54,6 +54,10 @@ Checks are ordered cheap-first:
 
 Config values are cached via `WorldScript::OnAfterConfigLoad`, so no config lookups occur on the damage hot path. Changes apply on `.reload config` without server restart.
 
+## Credits
+
+Based on the original [mod-leech](https://github.com/ZhengPeiRu21/mod-leech) by ZhengPeiRu21.
+
 ## License
 
 MIT
